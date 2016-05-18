@@ -16,8 +16,9 @@ class Leds
 public:
 	ws2811_led_t *colors;
 	std::vector<glm::vec3> spherePositions;
-	std::vector<std::vector<int>> neighbors;
 	std::vector<glm::vec3> worldPositions;
+	std::vector<std::vector<int>> neighbors;
+	std::vector<int> allIndices;
 
 	Leds();
 	~Leds();
@@ -26,8 +27,8 @@ public:
 
 	void updateWorldPositions(const glm::mat3 &sphereToWorld);
 
-	void render();
 	void clear();
+	void render();
 
 	static const int Count;
 	static const float VertexAngle;

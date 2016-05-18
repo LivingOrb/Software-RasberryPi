@@ -13,15 +13,18 @@ const float Leds::VertexAngle = atan2(0.894425f, 0.447215f);
 Leds::Leds()
 	: colors(nullptr)
 	, spherePositions(Count)
-	, neighbors(Count)
 	, worldPositions(Count)
-{}
+	, neighbors(Count)
+{
+	allIndices.reserve(Count);
+}
 
 Leds::~Leds()
 {
 	if (colors)
 	{
 		clear();
+		render();
 		ws2811_fini(&ledstring);
 	}
 }
@@ -191,6 +194,9 @@ bool Leds::initialize()
 	setEdge(100, vertices[9], vertices[6], 0.75f, 99, 101);
 	setVertex(101, vertices[6], 88, 89, 94, 95, 100);
 
+	for (int i = 0; i < Count; ++i)
+		allIndices.push_back(i);
+
 	return true;
 }
 
@@ -202,15 +208,14 @@ void Leds::updateWorldPositions(const glm::mat3 &sphereToWorld)
 	}
 }
 
-void Leds::render()
-{
-	ws2811_render(&ledstring);
-}
-
 void Leds::clear()
 {
 	memset((char*)colors, 0, Count * sizeof(ws2811_led_t));
-	render();
+}
+
+void Leds::render()
+{
+	ws2811_render(&ledstring);
 }
 
 void Leds::setVertex(int led, const glm::vec3 &position, int neighbor0, int neighbor1, int neighbor2, int neighbor3, int neighbor4)

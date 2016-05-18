@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <signal.h>
@@ -75,7 +76,15 @@ int main(void)
 
 		glm::mat3 sphereToWorld = cardToWorld * sphereToCard;
 		leds.updateWorldPositions(sphereToWorld);
-		
+
+		leds.clear();
+
+		std::sort(leds.allIndices.begin(), leds.allIndices.end(), [&leds](int a, int b)
+		{
+			return leds.worldPositions[a].z > leds.worldPositions[b].z;
+		});
+		leds.colors[leds.allIndices[0]] = 0xFFFFFF;
+
 		leds.render();
 	}
 
