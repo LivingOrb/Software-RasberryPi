@@ -3,6 +3,11 @@
 #include <signal.h>
 #include <unistd.h>
 
+extern "C"
+{
+#include <ws281x/ws2811.h>
+}
+
 #include <glm/mat3x3.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,12 +25,14 @@ static void ctrlCHandler(int signum)
 
 static void setupHandlers(void)
 {
-    struct sigaction sa = {};
-    sa.sa_handler = ctrlCHandler;
+	struct sigaction sa = {};
+	sa.sa_handler = ctrlCHandler;
 
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
 }
+
+static const int LedCount = 102;
 
 int main(void)
 {
@@ -39,10 +46,34 @@ int main(void)
 		rotationCalibration.close();
 		memcpy(glm::value_ptr(sphereToCard), matrixData, sizeof(matrixData));
 	}
+	else
+	{
+		std::cerr << "Warning: could not found rotation calibration" << std::endl;
+	}
+
+	ws2811_t ledstring;
+	memset((char*)&ledstring, 0, sizeof(ledstring));
+	ledstring.freq = WS2811_TARGET_FREQ;
+	ledstring.dmanum = 5;
+
+	ledstring.channel[0].gpionum = 18;
+	ledstring.channel[0].count = LedCount;
+	ledstring.channel[0].invert = 1;
+	ledstring.channel[0].brightness = 255;
+	ledstring.channel[0].strip_type = WS2811_STRIP_GRB;
+
+	if (ws2811_init(&ledstring))
+	{
+		std::cerr << "Failed to initialize ledstring" << std::endl;
+		return -1;
+	}
+
+	ws2811_led_t *leds = ledstring.channel[0].leds;
 
 	GY85 gy85;
 	if (!gy85.initialize())
 	{
+		std::cerr << "Failed to initialize GY-85" << std::endl;
 		gy85.shutdown();
 		return -1;
 	}
@@ -50,6 +81,7 @@ int main(void)
 	Timer timer;
 	if (!timer.initialize())
 	{
+		std::cerr << "Failed to initialize timer" << std::endl;
 		gy85.shutdown();
 		return -1;
 	}
@@ -73,9 +105,12 @@ int main(void)
 
 		glm::mat3 sphereToWorld = cardToWorld * sphereToCard;
 
-		usleep(30000);
+		ws2811_render(&ledstring);
 	}
 
+	ws2811_render(&ledstring);
+
 	gy85.shutdown();
-    return 0;
+	ws2811_fini(&ledstring);
+	return 0;
 }
