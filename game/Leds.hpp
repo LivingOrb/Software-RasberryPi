@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include <glm/mat3x3.hpp>
 #include <glm/vec3.hpp>
 
 extern "C"
@@ -16,11 +17,14 @@ public:
 	ws2811_led_t *ledColors;
 	std::vector<glm::vec3> ledPositions;
 	std::vector<std::vector<int>> ledNeighbors;
+	std::vector<glm::vec3> ledWorldPositions;
 
 	Leds();
 	~Leds();
 
 	bool initialize();
+
+	void updateWorldPositions(const glm::mat3 &sphereToWorld);
 
 	void render();
 	void clear();

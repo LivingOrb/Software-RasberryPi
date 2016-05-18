@@ -74,6 +74,7 @@ int main(void)
 		computeToWorldMatrix(accelerometer, compass, cardToWorld);
 
 		glm::mat3 sphereToWorld = cardToWorld * sphereToCard;
+		leds.updateWorldPositions(sphereToWorld);
 
 		leds.render();
 	}

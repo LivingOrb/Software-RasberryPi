@@ -14,6 +14,7 @@ Leds::Leds()
 	: ledColors(nullptr)
 	, ledPositions(Count)
 	, ledNeighbors(Count)
+	, ledWorldPositions(Count)
 {}
 
 Leds::~Leds()
@@ -191,6 +192,14 @@ bool Leds::initialize()
 	setVertex(101, vertices[6], 88, 89, 94, 95, 100);
 
 	return true;
+}
+
+void Leds::updateWorldPositions(const glm::mat3 &sphereToWorld)
+{
+	for (int i = 0; i < Count; ++i)
+	{
+		ledWorldPositions[i] = sphereToWorld * ledPositions[i];
+	}
 }
 
 void Leds::render()
