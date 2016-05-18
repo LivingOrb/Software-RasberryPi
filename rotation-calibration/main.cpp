@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <pthread.h>
 #include <signal.h>
@@ -6,7 +5,6 @@
 
 #include <glm/matrix.hpp>
 #include <glm/vec3.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <common/matrix.hpp>
 #include <common/GY85.hpp>
 #include <common/Timer.hpp>
@@ -39,8 +37,7 @@ static int shutdown(int code)
 	running = false;
 	void *ret;
 	pthread_join(thread, &ret);
-	gy85.shutdown();
-    return code;
+	return code;
 }
 
 int main()
@@ -52,13 +49,11 @@ int main()
 
 	if (!gy85.initialize())
 	{
-		gy85.shutdown();
 		return -1;
 	}
 
 	if (!timer.initialize())
 	{
-		gy85.shutdown();
 		return -1;
 	}
 
@@ -84,13 +79,7 @@ int main()
 	computeToWorldMatrix(accelerometer, compass, cardToWorld);
 
 	glm::mat3 worldToCard = glm::inverse(cardToWorld);
-
-	float matrixData[9];
-	memcpy(matrixData, glm::value_ptr(worldToCard), sizeof(matrixData));
-
-	std::ofstream rotationCalibration("rotation.calibration", std::ofstream::binary);
-	rotationCalibration.write((char*)matrixData, sizeof(matrixData));
-	rotationCalibration.close();
+	saveMatrix("rotation.calibration", worldToCard);
 
 	pthread_mutex_unlock(&mutex);
 

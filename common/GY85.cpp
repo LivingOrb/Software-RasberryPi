@@ -26,6 +26,12 @@ GY85::GY85()
 	, cZ(-658.7f, 324.9f)
 {}
 
+GY85::~GY85()
+{
+	close(aFile);
+	close(cFile);
+}
+
 bool GY85::initialize()
 {
 	int adapter;
@@ -71,12 +77,6 @@ bool GY85::initialize()
 	return true;
 }
 
-void GY85::shutdown()
-{
-	close(aFile);
-	close(cFile);
-}
-
 void GY85::update(float dt)
 {
 	ADXL345_ReadData(aFile, &aX.data, &aY.data, &aZ.data);
@@ -92,33 +92,33 @@ void GY85::update(float dt)
 
 bool GY85::aConfigure()
 {
-    CHECK(ADXL345_Init(aFile, ADXL345_ID, true));
+	CHECK(ADXL345_Init(aFile, ADXL345_ID, true));
 
-    struct ADXL345_DataFormat confDataFormat = {};
+	struct ADXL345_DataFormat confDataFormat = {};
 	confDataFormat.range = ADXL345_RANGE_2G;
-    CHECK(ADXL345_ConfigureDataFormat(aFile, &confDataFormat));
+	CHECK(ADXL345_ConfigureDataFormat(aFile, &confDataFormat));
 
-    struct ADXL345_Power confPowerControl = {};
+	struct ADXL345_Power confPowerControl = {};
 	confPowerControl.measurement = true;
-    CHECK(ADXL345_ConfigurePower(aFile, &confPowerControl));
+	CHECK(ADXL345_ConfigurePower(aFile, &confPowerControl));
 
-    return true;
+	return true;
 }
 
 bool GY85::cConfigure()
 {
-    CHECK(HMC5883L_Init(cFile, HMC5883L_ID, true));
+	CHECK(HMC5883L_Init(cFile, HMC5883L_ID, true));
 
-    struct HMC5883L conf = {};
-    conf.gain = HMC5883L_GAIN_1090;
-    conf.measurementMode = HMC5883L_MEASUREMENTMODE_NORMAL;
-    conf.outputRate = HMC5883L_OUTPUTRATE_30;
-    conf.samples = HMC5883L_SAMPLES_2;
-    CHECK(HMC5883L_Configure(cFile, &conf));
+	struct HMC5883L conf = {};
+	conf.gain = HMC5883L_GAIN_1090;
+	conf.measurementMode = HMC5883L_MEASUREMENTMODE_NORMAL;
+	conf.outputRate = HMC5883L_OUTPUTRATE_30;
+	conf.samples = HMC5883L_SAMPLES_2;
+	CHECK(HMC5883L_Configure(cFile, &conf));
 
-    CHECK(HMC5883L_SetContinuousMeasurement(cFile));
+	CHECK(HMC5883L_SetContinuousMeasurement(cFile));
 
-    return true;
+	return true;
 }
 
 

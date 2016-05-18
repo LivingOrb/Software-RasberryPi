@@ -8,9 +8,9 @@ public:
 	static const int MaxAdapters;
 
 	GY85();
+	~GY85();
 
 	bool initialize();
-	void shutdown();
 
 	void update(float dt);
 
