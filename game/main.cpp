@@ -75,7 +75,7 @@ int main(void)
 
 		glm::mat3 sphereToWorld = cardToWorld * sphereToCard;
 		leds.updateWorldPositions(sphereToWorld);
-
+		
 		leds.render();
 	}
 

@@ -14,10 +14,10 @@ extern "C"
 class Leds
 {
 public:
-	ws2811_led_t *ledColors;
-	std::vector<glm::vec3> ledPositions;
-	std::vector<std::vector<int>> ledNeighbors;
-	std::vector<glm::vec3> ledWorldPositions;
+	ws2811_led_t *colors;
+	std::vector<glm::vec3> spherePositions;
+	std::vector<std::vector<int>> neighbors;
+	std::vector<glm::vec3> worldPositions;
 
 	Leds();
 	~Leds();

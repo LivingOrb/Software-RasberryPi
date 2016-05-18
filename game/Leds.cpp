@@ -11,15 +11,15 @@ const int Leds::Count = 102;
 const float Leds::VertexAngle = atan2(0.894425f, 0.447215f);
 
 Leds::Leds()
-	: ledColors(nullptr)
-	, ledPositions(Count)
-	, ledNeighbors(Count)
-	, ledWorldPositions(Count)
+	: colors(nullptr)
+	, spherePositions(Count)
+	, neighbors(Count)
+	, worldPositions(Count)
 {}
 
 Leds::~Leds()
 {
-	if (ledColors)
+	if (colors)
 	{
 		clear();
 		ws2811_fini(&ledstring);
@@ -43,7 +43,7 @@ bool Leds::initialize()
 		return false;
 	}
 
-	ledColors = ledstring.channel[0].leds;
+	colors = ledstring.channel[0].leds;
 
 	std::vector<glm::vec3> vertices(12);
 	vertices[0] = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -198,7 +198,7 @@ void Leds::updateWorldPositions(const glm::mat3 &sphereToWorld)
 {
 	for (int i = 0; i < Count; ++i)
 	{
-		ledWorldPositions[i] = sphereToWorld * ledPositions[i];
+		worldPositions[i] = sphereToWorld * spherePositions[i];
 	}
 }
 
@@ -209,29 +209,29 @@ void Leds::render()
 
 void Leds::clear()
 {
-	memset((char*)ledColors, 0, Count * sizeof(ws2811_led_t));
+	memset((char*)colors, 0, Count * sizeof(ws2811_led_t));
 	render();
 }
 
 void Leds::setVertex(int led, const glm::vec3 &position, int neighbor0, int neighbor1, int neighbor2, int neighbor3, int neighbor4)
 {
-	ledPositions[led] = glm::normalize(position);
+	spherePositions[led] = glm::normalize(position);
 
-	std::vector<int> &neighbors = ledNeighbors[led];
-	neighbors.reserve(5);
-	neighbors.push_back(neighbor0);
-	neighbors.push_back(neighbor1);
-	neighbors.push_back(neighbor2);
-	neighbors.push_back(neighbor3);
-	neighbors.push_back(neighbor4);
+	std::vector<int> &ledNeighbors = neighbors[led];
+	ledNeighbors.reserve(5);
+	ledNeighbors.push_back(neighbor0);
+	ledNeighbors.push_back(neighbor1);
+	ledNeighbors.push_back(neighbor2);
+	ledNeighbors.push_back(neighbor3);
+	ledNeighbors.push_back(neighbor4);
 }
 
 void Leds::setEdge(int led, const glm::vec3 &position0, const glm::vec3 &position1, float t, int neighbor0, int neighbor1)
 {
-	ledPositions[led] = glm::normalize(position0 * sinf((1 - t) * VertexAngle) + position1 * sinf(t * VertexAngle));
+	spherePositions[led] = glm::normalize(position0 * sinf((1 - t) * VertexAngle) + position1 * sinf(t * VertexAngle));
 
-	std::vector<int> &neighbors = ledNeighbors[led];
-	neighbors.reserve(2);
-	neighbors.push_back(neighbor0);
-	neighbors.push_back(neighbor1);
+	std::vector<int> &ledNeighbors = neighbors[led];
+	ledNeighbors.reserve(2);
+	ledNeighbors.push_back(neighbor0);
+	ledNeighbors.push_back(neighbor1);
 }
