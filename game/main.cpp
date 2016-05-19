@@ -10,6 +10,7 @@
 #include <common/matrix.hpp>
 #include <common/GY85.hpp>
 #include <common/Timer.hpp>
+#include <game/color.hpp>
 #include <game/Leds.hpp>
 
 static bool running;
@@ -27,6 +28,11 @@ static void setupHandlers(void)
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
 }
+
+struct HSV
+{
+	float H, S, V;
+};
 
 int main(void)
 {
@@ -57,6 +63,8 @@ int main(void)
 		return -1;
 	}
 
+	std::vector<HSV> ledHSV(Leds::Count, {0.0f, 0.0f, 0.0f});
+
 	running = true;
 	setupHandlers();
 
@@ -78,12 +86,9 @@ int main(void)
 		leds.updateWorldPositions(sphereToWorld);
 
 		leds.clear();
-
-		std::sort(leds.allIndices.begin(), leds.allIndices.end(), [&leds](int a, int b)
-		{
-			return leds.worldPositions[a].z > leds.worldPositions[b].z;
-		});
-		leds.colors[leds.allIndices[0]] = 0xFFFFFF;
+		
+		for (int i = 0; i < Leds::Count; ++i)
+			leds.colors[i] = HSVtoRGB(ledHSV[i].H, ledHSV[i].S, ledHSV[i].V);
 
 		leds.render();
 	}
