@@ -25,8 +25,9 @@ Leds::~Leds()
 	{
 		clear();
 		render();
-		ws2811_fini(&ledstring);
 	}
+	
+	ws2811_fini(&ledstring);
 }
 
 bool Leds::initialize()
