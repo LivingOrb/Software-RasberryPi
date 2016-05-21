@@ -15,10 +15,9 @@ class Leds
 {
 public:
 	ws2811_led_t *colors;
+	std::vector<std::vector<int>> neighbors;
 	std::vector<glm::vec3> spherePositions;
 	std::vector<glm::vec3> worldPositions;
-	std::vector<std::vector<int>> neighbors;
-	std::vector<int> allIndices;
 
 	Leds();
 	~Leds();

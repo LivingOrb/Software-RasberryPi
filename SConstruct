@@ -7,11 +7,11 @@ common = Library('lib/common', Glob('common/*.cpp'),
 game = Program('bin/game', Glob('game/*.cpp') + [common],
 	CXXFLAGS='-std=c++11',
 	CPPPATH='.',
-	LIBS=['adxl345', 'hmc5883l', 'lua', 'ws2811'])
+	LIBS=['adxl345', 'dl', 'hmc5883l', 'lua', 'ws2811'])
 
 rotationCalibration = Program('bin/rotation-calibration', Glob('rotation-calibration/*.cpp') + [common],
 	CXXFLAGS='-std=c++11',
 	CPPPATH='.',
-	LIBS=['adxl345', 'hmc5883l', 'pthread'])
+	LIBS=['adxl345', 'hmc5883l', 'pthread', 'ws2811'])
 
 Default([game, rotationCalibration])

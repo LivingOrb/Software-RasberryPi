@@ -12,12 +12,10 @@ const float Leds::VertexAngle = atan2(0.894425f, 0.447215f);
 
 Leds::Leds()
 	: colors(nullptr)
+	, neighbors(Count)
 	, spherePositions(Count)
 	, worldPositions(Count)
-	, neighbors(Count)
-{
-	allIndices.reserve(Count);
-}
+{}
 
 Leds::~Leds()
 {
@@ -26,7 +24,7 @@ Leds::~Leds()
 		clear();
 		render();
 	}
-	
+
 	ws2811_fini(&ledstring);
 }
 
@@ -194,9 +192,6 @@ bool Leds::initialize()
 	setEdge(99, vertices[9], vertices[6], 0.5f, 98, 100);
 	setEdge(100, vertices[9], vertices[6], 0.75f, 99, 101);
 	setVertex(101, vertices[6], 88, 89, 94, 95, 100);
-
-	for (int i = 0; i < Count; ++i)
-		allIndices.push_back(i);
 
 	return true;
 }

@@ -8,7 +8,7 @@ static float clamp(float x, float min, float max)
 	return std::min(max, std::max(min, x));
 }
 
-uint32_t HSVtoRGB(float H, float S, float V)
+uint32_t HSVtoColor(float H, float S, float V)
 {
 	float Hval = std::fmod(H * 6.0f, 6.0f);
 	int sel = (int)Hval;
@@ -60,6 +60,11 @@ uint32_t HSVtoRGB(float H, float S, float V)
 		B = v1;
 		break;
 	}
+	return RGBtoColor(R, G, B);
+}
+
+uint32_t RGBtoColor(float R, float G, float B)
+{
 	return ((int)(clamp(R, 0.0f, 1.0f) * 255) << 16) |
 		((int)(clamp(G, 0.0f, 1.0f) * 255) << 8) |
 		((int)(clamp(B, 0.0f, 1.0f) * 255) << 0);
