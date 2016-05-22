@@ -1,5 +1,6 @@
 *.a
 *.calibration
+*.log
 *.o
 .sconsign.dblite
 node_modules

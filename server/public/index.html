@@ -7,32 +7,37 @@
 		<link rel="stylesheet" href="css/orb.css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
-	<body>
-		<div class="container-fluid" ng-controller="OrbCtrl">
-			<form ng-submit="startMode(script)">
-				<textarea class="form-control" rows="15" ng-model="script"></textarea>
+	<body ng-controller="OrbCtrl">
+		<div id="editor"></div>
+		<div id="menu">
+			<div class="btn-group" role="group">
+				<button type="button" class="btn btn-primary" ng-click="startMode()"><span class="glyphicon glyphicon-play"></span></button>
+				<button type="button" class="btn btn-default" ng-click="stopMode()"><span class="glyphicon glyphicon-stop"></span></button>
 				<div class="btn-group" role="group">
-					<button type="submit" class="btn btn-primary">Start</button>
-					<button type="button" class="btn btn-default" ng-click="stopMode()">Stop</button>
-					<a class="btn btn-default" href="stdout.log" target="_blank">stdout.log</a>
-					<a class="btn btn-default" href="stderr.log" target="_blank">stderr.log</a>
-					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Existing modes
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li ng-repeat="mode in modes | orderBy: 'name'">
-								<a href="" ng-click="showScript(mode.script)">{{mode.name}}</a>
-							</li>
-						</ul>
-					</div>
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="glyphicon glyphicon-book"></span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li><a href="stdout.log" target="_blank">stdout.log</a></li>
+						<li><a href="stderr.log" target="_blank">stderr.log</a></li>
+					</ul>
 				</div>
-			</form>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="glyphicon glyphicon-open"></span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li ng-repeat="mode in modes | orderBy: 'name'">
+							<a href="" ng-click="showScript(mode.script)">{{mode.name}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<script src="js/jquery-1.12.4.min.js"></script>
 		<script src="js/angular.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+		<script src="js/ace/ace.js"></script>
 		<script src="js/orb.js"></script>
 	</body>
 </html>

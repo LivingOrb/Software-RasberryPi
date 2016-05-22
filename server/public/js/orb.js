@@ -3,8 +3,11 @@ angular.module('orb', [])
 .controller('OrbCtrl', function($http, $scope) {
 	'use strict';
 
+	var editor = ace.edit('editor');
+	editor.setTheme('ace/theme/monokai');
+	editor.getSession().setMode('ace/mode/lua');
+
 	$scope.modes = [];
-	$scope.script = 'function update(dt)\nend';
 
 	$http.get('/api/modes')
 		.then(function(response) {
@@ -13,7 +16,7 @@ angular.module('orb', [])
 
 	$scope.startMode = function(script) {
 		$http.post('/api/start-mode', {
-			script: script,
+			script: editor.getValue(),
 		});
 	};
 
@@ -22,6 +25,6 @@ angular.module('orb', [])
 	};
 
 	$scope.showScript = function(script) {
-		$scope.script = script;
+		editor.setValue(script);
 	};
 });
