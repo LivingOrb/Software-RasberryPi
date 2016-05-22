@@ -11,6 +11,12 @@ angular.module('orb', [])
 
 	$scope.modes = [];
 
+	function sortModes() {
+		$scope.modes.sort(function(a, b) {
+			return a.name.localeCompare(b.name);
+		});
+	}
+
 	function save() {
 		if (!modeName)
 			return saveAs();
@@ -29,6 +35,7 @@ angular.module('orb', [])
 					name: modeName,
 					script: script,
 				});
+				sortModes();
 			}
 		});
 	}
@@ -79,6 +86,7 @@ angular.module('orb', [])
 	$http.get('/api/modes')
 		.then(function(response) {
 			$scope.modes = response.data.modes;
+			sortModes();
 		});
 
 	$scope.stopMode = function(script) {
