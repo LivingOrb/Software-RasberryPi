@@ -57,7 +57,7 @@ function update(dt)
 		if countdown <= 0.0 then
 			playing = true
 
-			max_countdown = 0.25
+			max_countdown = 0.5
 			countdown = max_countdown
 			hue = 0.0
 
