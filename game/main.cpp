@@ -13,11 +13,11 @@
 #include <common/Timer.hpp>
 #include <game/Mode.hpp>
 
-static bool running;
+static Leds leds;
 
 static void ctrlCHandler(int signum)
 {
-	running = false;
+	exit(0);
 }
 
 static void setupHandlers(void)
@@ -29,44 +29,6 @@ static void setupHandlers(void)
 	sigaction(SIGTERM, &sa, NULL);
 }
 
-struct HSV
-{
-	float H, S, V;
-};
-
-static Leds leds;
-/*
-static int currentLed, targetLed;
-static float maxCountdown, countdown;
-static float hue;
-static std::vector<HSV> ledHSV(Leds::Count, {0.0f, 0.0f, 0.0f});
-
-static const std::vector<int> &findHighestLeds()
-{
-	std::sort(leds.allIndices.begin(), leds.allIndices.end(), [](int a, int b)
-	{
-		return leds.worldPositions[a].z > leds.worldPositions[b].z;
-	});
-	return leds.allIndices;
-}
-
-static const std::vector<int> &findLowestNeighbors(int led)
-{
-	std::vector<int> &neighbors = leds.neighbors[led];
-	std::sort(neighbors.begin(), neighbors.end(), [](int a, int b)
-	{
-		return leds.worldPositions[a].z < leds.worldPositions[b].z;
-	});
-	return neighbors;
-}
-
-void turnOnCurrentLed()
-{
-	ledHSV[currentLed].H = hue;
-	ledHSV[currentLed].S = 1.0;
-	ledHSV[currentLed].V = 1.0;
-}
-*/
 int main(void)
 {
 	glm::mat3 sphereToCard;
@@ -95,6 +57,8 @@ int main(void)
 		return -1;
 	}
 
+	setupHandlers();
+
 	Mode mode(leds);
 	if (!mode.loadScript())
 	{
@@ -102,10 +66,7 @@ int main(void)
 		return -1;
 	}
 
-	running = true;
-	setupHandlers();
-
-	while (running)
+	for (;;)
 	{
 		float dt = timer.getElapsedTime();
 		gy85.update(dt);
