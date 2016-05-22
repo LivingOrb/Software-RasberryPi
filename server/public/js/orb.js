@@ -39,6 +39,12 @@ angular.module('orb', [])
 			return save();
 	}
 
+	function startMode() {
+		$http.post('/api/start-mode', {
+			script: editor.getValue(),
+		});
+	}
+
 	editor.commands.addCommand({
 		name: 'save',
 		bindKey: {
@@ -57,19 +63,23 @@ angular.module('orb', [])
 		exec: saveAs,
 	});
 
+	editor.commands.addCommand({
+		name: 'startMode',
+		bindKey: {
+			win: 'Ctrl-Enter',
+			mac: 'Command-Enter',
+		},
+		exec: startMode,
+	});
+
 	$scope.save = save;
 	$scope.saveAs = saveAs;
+	$scope.startMode = startMode;
 
 	$http.get('/api/modes')
 		.then(function(response) {
 			$scope.modes = response.data.modes;
 		});
-
-	$scope.startMode = function(script) {
-		$http.post('/api/start-mode', {
-			script: editor.getValue(),
-		});
-	};
 
 	$scope.stopMode = function(script) {
 		$http.post('/api/stop-mode');
