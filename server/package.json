@@ -1,0 +1,13 @@
+{
+  "name": "orb-server",
+  "version": "1.0.0",
+  "description": "Server for Orb",
+  "main": "app.js",
+  "private": true,
+  "dependencies": {
+    "async": "^2.0.0-rc.5",
+    "body-parser": "^1.15.1",
+    "config-path": "^2.1.0",
+    "express": "^4.13.4"
+  }
+}

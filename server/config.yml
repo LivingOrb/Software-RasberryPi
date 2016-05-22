@@ -1,0 +1,7 @@
+development:
+  gameMaxBuffer: 10485760
+  gamePath: 'bin/game'
+  gameWd: '..'
+  modesPath: 'modes'
+  publicPath: 'public'
+  port: 80

@@ -2,3 +2,4 @@
 *.calibration
 *.o
 .sconsign.dblite
+node_modules

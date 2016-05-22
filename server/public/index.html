@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="orb">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Orb</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="css/orb.css"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<div class="container-fluid" ng-controller="OrbCtrl">
+			<form ng-submit="startMode(script)">
+				<textarea class="form-control" rows="15" ng-model="script"></textarea>
+				<div class="btn-group" role="group">
+					<button type="submit" class="btn btn-primary">Start</button>
+					<button type="button" class="btn btn-default" ng-click="stopMode()">Stop</button>
+					<a class="btn btn-default" href="stdout.log" target="_blank">stdout.log</a>
+					<a class="btn btn-default" href="stderr.log" target="_blank">stderr.log</a>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Existing modes
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li ng-repeat="mode in modes | orderBy: 'name'">
+								<a href="" ng-click="showScript(mode.script)">{{mode.name}}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script src="js/jquery-1.12.4.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/orb.js"></script>
+	</body>
+</html>
