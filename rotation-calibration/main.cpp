@@ -32,6 +32,14 @@ static void *measure(void *arg)
 			gy85.getCompass(compass);
 
 			pthread_mutex_unlock(&mutex);
+
+			glm::mat3 worldToCard;
+			computeToWorldMatrix(accelerometer, compass, worldToCard);
+
+			std::cout << "Accelerometer " << glm::to_string(accelerometer) << "\n";
+			std::cout << "Compass       " << glm::to_string(compass) << "\n";
+			std::cout << "Matrix        " << glm::to_string(worldToCard) << "\n";
+			std::cout << std::endl;
 		}
 
 		usleep(30000);
