@@ -34,6 +34,17 @@ function api() {
 		});
 	});
 
+	router.put('/modes/:modeName', function(req, res, next) {
+		if (!req.params.modeName || !req.body.script)
+			return res.sendStatus(400);
+
+		var filename = req.params.modeName + '.lua';
+		return fs.writeFile(path.join(config.modesPath, filename), req.body.script, function(err) {
+			if (err) return next(err);
+			return res.sendStatus(200);
+		});
+	});
+
 	router.post('/start-mode', function(req, res, next) {
 		if (!req.body.script)
 			return res.sendStatus(400);

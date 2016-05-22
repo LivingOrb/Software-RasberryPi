@@ -7,7 +7,58 @@ angular.module('orb', [])
 	editor.setTheme('ace/theme/monokai');
 	editor.getSession().setMode('ace/mode/lua');
 
+	var modeName;
+
 	$scope.modes = [];
+
+	function save() {
+		if (!modeName)
+			return saveAs();
+
+		var script = editor.getValue();
+		$http.put('/api/modes/' + modeName, {
+			script: script,
+		}).then(function() {
+			if (!$scope.modes.some(function(mode) {
+				if (mode.name === modeName) {
+					mode.script = script;
+					return true;
+				}
+			})) {
+				$scope.modes.push({
+					name: modeName,
+					script: script,
+				});
+			}
+		});
+	}
+
+	function saveAs() {
+		modeName = prompt('Name:', modeName || 'new-mode');
+		if (modeName)
+			return save();
+	}
+
+	editor.commands.addCommand({
+		name: 'save',
+		bindKey: {
+			win: 'Ctrl-S',
+			mac: 'Command-S',
+		},
+		exec: save,
+	});
+
+	editor.commands.addCommand({
+		name: 'saveAs',
+		bindKey: {
+			win: 'Ctrl-Shift-S',
+			mac: 'Command-Shift-S',
+		},
+		exec: saveAs,
+	});
+
+	$scope.save = save;
+	$scope.saveAs = saveAs;
 
 	$http.get('/api/modes')
 		.then(function(response) {
@@ -24,7 +75,8 @@ angular.module('orb', [])
 		$http.post('/api/stop-mode');
 	};
 
-	$scope.showScript = function(script) {
-		editor.setValue(script);
+	$scope.showScript = function(mode) {
+		modeName = mode.name;
+		editor.setValue(mode.script);
 	};
 });
