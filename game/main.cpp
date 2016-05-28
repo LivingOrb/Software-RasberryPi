@@ -90,6 +90,10 @@ int main(void)
 		{
 			leds.render();
 		}
+		else
+		{
+			usleep(100000);
+		}
 	}
 
 	return 0;

@@ -21,7 +21,6 @@ private:
 	static int luaGetNeighbors(lua_State *L);
 	static int luaGetSpherePosition(lua_State *L);
 	static int luaGetWorldPosition(lua_State *L);
+	static int luaHSVToRGB(lua_State *L);
 	static int luaSetColor(lua_State *L);
-	static int luaSetHSV(lua_State *L);
-	static int luaSetRGB(lua_State *L);
 };

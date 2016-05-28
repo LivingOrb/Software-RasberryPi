@@ -25,9 +25,8 @@ Mode::Mode(Leds &_leds)
 		{"get_neighbors", luaGetNeighbors},
 		{"get_sphere_position", luaGetSpherePosition},
 		{"get_world_position", luaGetWorldPosition},
+		{"hsv_to_rgb", luaHSVToRGB},
 		{"set_color", luaSetColor},
-		{"set_hsv", luaSetHSV},
-		{"set_rgb", luaSetRGB},
 		{nullptr, nullptr},
 	};
 
@@ -132,27 +131,20 @@ int Mode::luaGetWorldPosition(lua_State *L)
 	return 3;
 }
 
+int Mode::luaHSVToRGB(lua_State *L)
+{
+	auto H = luaL_checknumber(L, 1);
+	auto S = luaL_checknumber(L, 2);
+	auto V = luaL_checknumber(L, 3);
+	float R, G, B;
+	HSVtoRGB(H, S, V, R, G, B);
+	lua_pushnumber(L, R);
+	lua_pushnumber(L, G);
+	lua_pushnumber(L, B);
+	return 3;
+}
+
 int Mode::luaSetColor(lua_State *L)
-{
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
-	auto color = luaL_checkinteger(L, 2);
-	pThis->leds.colors[index] = color;
-	return 0;
-}
-
-int Mode::luaSetHSV(lua_State *L)
-{
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
-	auto H = luaL_checknumber(L, 2);
-	auto S = luaL_checknumber(L, 3);
-	auto V = luaL_checknumber(L, 4);
-	pThis->leds.colors[index] = HSVtoColor(H, S, V);
-	return 0;
-}
-
-int Mode::luaSetRGB(lua_State *L)
 {
 	auto pThis = getThis(L, 1);
 	auto index = getLedIndex(L, 1);

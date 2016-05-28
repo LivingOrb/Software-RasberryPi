@@ -2,5 +2,5 @@
 
 #include <cstdint>
 
-uint32_t HSVtoColor(float H, float S, float V);
+void HSVtoRGB(float H, float S, float V, float &R, float &G, float &B);
 uint32_t RGBtoColor(float R, float G, float B);
