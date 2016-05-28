@@ -10,8 +10,8 @@ end
 
 function update(dt)
 	local i = find_highest_leds()[1]
-	set_rgb(i, 1.0, 0.0, 0.0)
+	set_color(i, 1.0, 0.0, 0.0)
 	for _, n in ipairs(get_neighbors(i)) do
-		set_rgb(n, 0.0, 1.0, 0.0)
+		set_color(n, 0.0, 1.0, 0.0)
 	end
 end

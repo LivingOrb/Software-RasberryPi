@@ -16,11 +16,11 @@ end
 
 function update(dt)
 	sort_indices_by_world_position("x")
-	set_rgb(indices[1], 1.0, 0.0, 0.0)
+	set_color(indices[1], 1.0, 0.0, 0.0)
 
 	sort_indices_by_world_position("y")
-	set_rgb(indices[1], 0.0, 1.0, 0.0)
+	set_color(indices[1], 0.0, 1.0, 0.0)
 
 	sort_indices_by_world_position("z")
-	set_rgb(indices[1], 0.0, 0.0, 1.0)
+	set_color(indices[1], 0.0, 0.0, 1.0)
 end

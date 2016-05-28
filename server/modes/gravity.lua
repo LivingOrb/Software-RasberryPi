@@ -100,6 +100,6 @@ function update(dt)
 	end
 
 	for i, hsv in ipairs(hsvs) do
-		set_hsv(i, table.unpack(hsv))
+		set_color(i, hsv_to_rgb(table.unpack(hsv)))
 	end
 end
