@@ -3,4 +3,5 @@
 *.log
 *.o
 .sconsign.dblite
+leds.lua
 node_modules
