@@ -33,11 +33,13 @@ Mode::Mode(Leds &_leds)
 	lua_pushlightuserdata(L, this);
 	luaL_setfuncs(L, globalFunctions, 1);
 
-	lua_pushinteger(L, Leds::Count);
+	std::size_t count = leds.getCount();
+
+	lua_pushinteger(L, count);
 	lua_setfield(L, -2, "Count");
 
-	lua_createtable(L, Leds::Count, 0);
-	for (int i = 0; i < Leds::Count; ++i)
+	lua_createtable(L, count, 0);
+	for (std::size_t i = 0; i < count; ++i)
 	{
 		lua_pushinteger(L, i + 1);
 		lua_rawseti(L, -2, i + 1);
@@ -81,23 +83,23 @@ bool Mode::pcall(lua_State *L, int nargs, int nresults)
 	return true;
 }
 
-static Mode *getThis(lua_State *L, int up)
+Mode *Mode::luaGetThis(lua_State *L)
 {
-	return (Mode *)lua_touserdata(L, lua_upvalueindex(up));
+	return (Mode *)lua_touserdata(L, lua_upvalueindex(1));
 }
 
-static int getLedIndex(lua_State *L, int arg)
+std::size_t Mode::luaGetLedIndex(const Mode *pThis, lua_State *L, int arg)
 {
-	int index = luaL_checkinteger(L, arg) - 1;
-	luaL_argcheck(L, index >= 0 && index < Leds::Count, arg, "Index out of range")	;
+	std::size_t index = luaL_checkinteger(L, arg) - 1;
+	luaL_argcheck(L, index < pThis->leds.getCount(), arg, "Index out of range");
 	return index;
 }
 
 int Mode::luaGetNeighbors(lua_State *L)
 {
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
-	auto &neighbors = pThis->leds.neighbors[index];
+	auto pThis = luaGetThis(L);
+	auto index = luaGetLedIndex(pThis, L, 1);
+	auto &neighbors = pThis->leds.getNeighbors(index);
 	lua_createtable(L, neighbors.size(), 0);
 	int i = 1;
 	for (auto &neighbor : neighbors)
@@ -111,9 +113,9 @@ int Mode::luaGetNeighbors(lua_State *L)
 
 int Mode::luaGetSpherePosition(lua_State *L)
 {
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
-	auto &position = pThis->leds.spherePositions[index];
+	auto pThis = luaGetThis(L);
+	auto index = luaGetLedIndex(pThis, L, 1);
+	auto &position = pThis->leds.getSpherePosition(index);
 	lua_pushnumber(L, position.x);
 	lua_pushnumber(L, position.y);
 	lua_pushnumber(L, position.z);
@@ -122,9 +124,9 @@ int Mode::luaGetSpherePosition(lua_State *L)
 
 int Mode::luaGetWorldPosition(lua_State *L)
 {
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
-	auto &position = pThis->leds.worldPositions[index];
+	auto pThis = luaGetThis(L);
+	auto index = luaGetLedIndex(pThis, L, 1);
+	auto &position = pThis->leds.getWorldPosition(index);
 	lua_pushnumber(L, position.x);
 	lua_pushnumber(L, position.y);
 	lua_pushnumber(L, position.z);
@@ -146,11 +148,11 @@ int Mode::luaHSVToRGB(lua_State *L)
 
 int Mode::luaSetColor(lua_State *L)
 {
-	auto pThis = getThis(L, 1);
-	auto index = getLedIndex(L, 1);
+	auto pThis = luaGetThis(L);
+	auto index = luaGetLedIndex(pThis, L, 1);
 	auto R = luaL_checknumber(L, 2);
 	auto G = luaL_checknumber(L, 3);
 	auto B = luaL_checknumber(L, 4);
-	pThis->leds.colors[index] = RGBtoColor(R, G, B);
+	pThis->leds.setColor(index, RGBtoColor(R, G, B));
 	return 0;
 }

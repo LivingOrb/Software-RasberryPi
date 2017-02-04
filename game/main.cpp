@@ -14,10 +14,11 @@
 #include <game/Mode.hpp>
 
 static Leds leds;
+static bool running = true;
 
 static void ctrlCHandler(int signum)
 {
-	exit(0);
+	running = false;
 }
 
 static void setupHandlers(void)
@@ -66,7 +67,7 @@ int main(void)
 		return -1;
 	}
 
-	for (;;)
+	while (running)
 	{
 		float dt = timer.getElapsedTime();
 		gy85.update(dt);
@@ -95,6 +96,8 @@ int main(void)
 			usleep(100000);
 		}
 	}
+
+	leds.shutdown();
 
 	return 0;
 }

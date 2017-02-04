@@ -11,30 +11,35 @@ extern "C"
 #include <ws281x/ws2811.h>
 }
 
+struct lua_State;
+
 class Leds
 {
 public:
-	ws2811_led_t *colors;
-	std::vector<std::vector<int>> neighbors;
-	std::vector<glm::vec3> spherePositions;
-	std::vector<glm::vec3> worldPositions;
-
-	Leds();
-	~Leds();
-
 	bool initialize();
+	void shutdown();
 
 	void updateWorldPositions(const glm::mat3 &sphereToWorld);
 
 	void clear();
 	void render();
 
-	static const int Count;
-	static const float VertexAngle;
+	std::size_t getCount() const;
+	const std::vector<int> &getNeighbors(std::size_t led) const;
+	const glm::vec3 &getSpherePosition(std::size_t led) const;
+	const glm::vec3 &getWorldPosition(std::size_t led) const;
+	void setColor(std::size_t led, uint32_t color);
 
 private:
 	ws2811_t ledstring;
+	std::vector<std::vector<int>> neighbors;
+	std::vector<glm::vec3> spherePositions;
+	std::vector<glm::vec3> worldPositions;
 
-	void setVertex(int led, const glm::vec3 &position, int neighbor0, int neighbor1, int neighbor2, int neighbor3, int neighbor4);
-	void setEdge(int led, const glm::vec3 &position0, const glm::vec3 &position1, float t, int neighbor0, int neighbor1);
+	static Leds *luaGetThis(lua_State *L);
+	static std::size_t luaGetLedIndex(const Leds *pThis, lua_State *L, int arg);
+
+	static int luaSetCount(lua_State *L);
+	static int luaAddNeighbor(lua_State *L);
+	static int luaSetSpherePosition(lua_State *L);
 };
